@@ -271,7 +271,7 @@ class HentailaTv :
                 val vipVideos = vips.catchingFlatMapBlocking { vip ->
                     universalextractor.videosFromUrl(
                         vip.url.replace("/play/", "/m3u8/"),
-                        origRequestHeader = headers,
+                        headers = headers,
                         prefix = "VIP",
                     )
                 }
@@ -285,9 +285,9 @@ class HentailaTv :
 
                         "arc" -> listOf(Video(each.url.substringAfter("#"), "Arc", each.url.substringAfter("#")))
 
-                        "yupi", "yourupload" -> yourUploadExtractor.videoFromUrl(each.url, headers = headers)
+                        "yupi", "yourupload" -> listOfNotNull(yourUploadExtractor.videoFromUrl(each.url, headers = headers))
 
-                        "burst" -> burstCloudExtractor.videoFromUrl(each.url, headers = headers)
+                        "burst" -> listOfNotNull(burstCloudExtractor.videoFromUrl(each.url, headers = headers))
 
                         "sendvid" -> sendvidextractor.videosFromUrl(each.url)
 
