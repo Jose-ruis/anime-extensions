@@ -270,17 +270,17 @@ class HentailaTv :
                         prefix = "VIP",
                     )
                 }
-                val otherVideos: List<Video> = others.parallelCatchingFlatMapBlocking { each ->
-                    when (each.name.lowercase()) {
-                        "streamwish" -> streamWishExtractor.videosFromUrl(each.url, videoNameGen = { "StreamWish:$it" })
-                        "mp4upload" -> mp4uploadExtractor.videosFromUrl(each.url, headers = headers, prefix = "Mp4Upload")
-                        "voe" -> voeExtractor.videosFromUrl(each.url)
-                        "arc" -> listOf(Video(each.url.substringAfter("#"), "Arc", each.url.substringAfter("#")))
-                        "yupi", "yourupload" -> listOfNotNull(yourUploadExtractor.videoFromUrl(each.url, headers = headers))
-                        "burst" -> listOfNotNull(burstCloudExtractor.videoFromUrl(each.url, headers = headers))
-                        "sendvid" -> sendvidextractor.videosFromUrl(each.url)
-                        "mediafire", "fireload" -> universalextractor.videosFromUrl(each.url, headers)
-                        "vidhide" -> vidhideextractor.videosFromUrl(each.url)
+                val otherVideos: List<Video> = others.parallelCatchingFlatMapBlocking { videoData ->
+                    when (videoData.name.lowercase()) {
+                        "streamwish" -> streamWishExtractor.videosFromUrl(videoData.url, videoNameGen = { "StreamWish:$it" })
+                        "mp4upload" -> mp4uploadExtractor.videosFromUrl(videoData.url, headers = headers, prefix = "Mp4Upload")
+                        "voe" -> voeExtractor.videosFromUrl(videoData.url)
+                        "arc" -> listOf(Video(videoData.url.substringAfter("#"), "Arc", videoData.url.substringAfter("#")))
+                        "yupi", "yourupload" -> listOfNotNull(yourUploadExtractor.videoFromUrl(videoData.url, headers = headers))
+                        "burst" -> listOfNotNull(burstCloudExtractor.videoFromUrl(videoData.url, headers = headers))
+                        "sendvid" -> sendvidextractor.videosFromUrl(videoData.url)
+                        "mediafire", "fireload" -> universalextractor.videosFromUrl(videoData.url, headers)
+                        "vidhide" -> vidhideextractor.videosFromUrl(videoData.url)
                         else -> emptyList()
                     }
                 }
