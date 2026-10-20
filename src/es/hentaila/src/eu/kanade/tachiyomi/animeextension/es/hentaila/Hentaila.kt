@@ -43,7 +43,7 @@ class Hentaila :
     ConfigurableAnimeSource {
 
     override val name = "Hentaila"
-    override val baseUrl = "https://hentaila.com"
+    override val baseUrl = "https://hentaila.com/hub"
     override val lang = "es"
     override val supportsLatest = true
 
@@ -58,7 +58,7 @@ class Hentaila :
     }
 
     companion object {
-        private const val CDN_BASE_URL = "https://cdn.hentaila.com"
+        private const val CDN_BASE_URL = "https://hentaila.com/hub"
         private const val PREF_QUALITY_KEY = "preferred_quality"
         private const val PREF_QUALITY_DEFAULT = "1080"
         private val QUALITY_LIST = arrayOf("1080", "720", "480", "360")
