@@ -268,14 +268,14 @@ class HentailaTv :
         return serverList
             .partition { it.name.lowercase() == "vip" }
             .let { (vips, others) ->
-                val vipVideos = vips.catchingFlatMapBlocking { vip ->
+                val vipVideos: List<Video> = vips.catchingFlatMapBlocking { vip ->
                     universalextractor.videosFromUrl(
                         vip.url.replace("/play/", "/m3u8/"),
                         headers = headers,
                         prefix = "VIP",
                     )
                 }
-                val otherVideos = others.parallelCatchingFlatMapBlocking { each ->
+                val otherVideos: List<Video> = others.parallelCatchingFlatMapBlocking { each ->
                     when (each.name.lowercase()) {
                         "streamwish" -> streamWishExtractor.videosFromUrl(each.url, videoNameGen = { "StreamWish:$it" })
 
