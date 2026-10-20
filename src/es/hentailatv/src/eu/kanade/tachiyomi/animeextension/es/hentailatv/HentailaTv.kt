@@ -104,21 +104,16 @@ class HentailaTv :
             filterList.forEach { filter ->
                 when (filter) {
                     is GenreFilter -> urlBuilder.addQueryParameter("genre", filter.toUriPart())
-
                     is OrderFilter -> urlBuilder.addQueryParameter("filter", filter.toUriPart())
-
                     is StatusOngoingFilter -> if (filter.state) {
                         urlBuilder.addQueryParameter("status", "emision")
                     }
-
                     is StatusCompletedFilter -> if (filter.state) {
                         urlBuilder.addQueryParameter("status", "finalizado")
                     }
-
                     is UncensoredFilter -> if (filter.state) {
                         urlBuilder.addQueryParameter("uncensored", "")
                     }
-
                     else -> {}
                 }
             }
@@ -278,23 +273,14 @@ class HentailaTv :
                 val otherVideos: List<Video> = others.parallelCatchingFlatMapBlocking { each ->
                     when (each.name.lowercase()) {
                         "streamwish" -> streamWishExtractor.videosFromUrl(each.url, videoNameGen = { "StreamWish:$it" })
-
                         "mp4upload" -> mp4uploadExtractor.videosFromUrl(each.url, headers = headers, prefix = "Mp4Upload")
-
                         "voe" -> voeExtractor.videosFromUrl(each.url)
-
                         "arc" -> listOf(Video(each.url.substringAfter("#"), "Arc", each.url.substringAfter("#")))
-
                         "yupi", "yourupload" -> listOfNotNull(yourUploadExtractor.videoFromUrl(each.url, headers = headers))
-
                         "burst" -> listOfNotNull(burstCloudExtractor.videoFromUrl(each.url, headers = headers))
-
                         "sendvid" -> sendvidextractor.videosFromUrl(each.url)
-
                         "mediafire", "fireload" -> universalextractor.videosFromUrl(each.url, headers)
-
                         "vidhide" -> vidhideextractor.videosFromUrl(each.url)
-
                         else -> emptyList()
                     }
                 }
@@ -401,8 +387,7 @@ class HentailaTv :
             entryValues = SERVER_LIST
             setDefaultValue(PREF_SERVER_DEFAULT)
             summary = "%s"
-        }
-            .also(screen::addPreference)
+        }.also(screen::addPreference)
 
         ListPreference(screen.context).apply {
             key = PREF_QUALITY_KEY
