@@ -10,8 +10,8 @@ import aniyomi.lib.universalextractor.UniversalExtractor
 import aniyomi.lib.vidhideextractor.VidHideExtractor
 import aniyomi.lib.voeextractor.VoeExtractor
 import aniyomi.lib.youruploadextractor.YourUploadExtractor
-import eu.kanade.tachiyomi.animeextension.es.hentaila.extractors.FireLoadExtractor
-import eu.kanade.tachiyomi.animeextension.es.hentaila.extractors.MediaFireExtractor
+import eu.kanade.tachiyomi.animeextension.es.hentailatv.extractors.FireLoadExtractor
+import eu.kanade.tachiyomi.animeextension.es.hentailatv.extractors.MediaFireExtractor
 import eu.kanade.tachiyomi.animesource.ConfigurableAnimeSource
 import eu.kanade.tachiyomi.animesource.model.AnimeFilter
 import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
