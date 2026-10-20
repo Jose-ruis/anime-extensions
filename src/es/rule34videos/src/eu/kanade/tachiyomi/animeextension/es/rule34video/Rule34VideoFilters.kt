@@ -1,10 +1,10 @@
-package eu.kanade.tachiyomi.animeextension.es.animeflv
+package eu.kanade.tachiyomi.animeextension.es.rule34video
 
 import eu.kanade.tachiyomi.animesource.model.AnimeFilter
 import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import java.util.Calendar
 
-object AnimeFlvFilters {
+object Rule34VideoFilters {
     open class QueryPartFilter(displayName: String, val vals: Array<Pair<String, String>>) :
         AnimeFilter.Select<String>(
             displayName,
