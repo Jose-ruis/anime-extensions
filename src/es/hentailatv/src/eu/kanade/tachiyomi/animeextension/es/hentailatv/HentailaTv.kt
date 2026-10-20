@@ -401,7 +401,8 @@ class HentailaTv :
             entryValues = SERVER_LIST
             setDefaultValue(PREF_SERVER_DEFAULT)
             summary = "%s"
-        }.also(screen::addPreference)
+        }
+        .also(screen::addPreference)
 
         ListPreference(screen.context).apply {
             key = PREF_QUALITY_KEY
