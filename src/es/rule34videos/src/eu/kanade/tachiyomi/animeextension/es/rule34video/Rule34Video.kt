@@ -142,7 +142,7 @@ class Rule34Video :
     override fun videoFromElement(element: Element) = throw UnsupportedOperationException()
 
     override fun searchAnimeRequest(page: Int, query: String, filters: AnimeFilterList): Request {
-        val params = AnimeFlvFilters.getSearchParameters(filters)
+        val params = Rule34VideoFilters.getSearchParameters(filters)
         return when {
             query.isNotBlank() -> GET("$baseUrl/browse?q=$query&page=$page", headers)
             params.filter.isNotBlank() -> GET("$baseUrl/browse${params.getQuery()}&page=$page", headers)
