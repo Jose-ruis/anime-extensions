@@ -223,9 +223,9 @@ class HentailaTv :
     private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val yourUploadExtractor by lazy { YourUploadExtractor(client) }
     private val burstCloudExtractor by lazy { BurstCloudExtractor(client) }
-    private val sendvidExtractor by lazy { SendvidExtractor(client, headers) }
-    private val vidhideExtractor by lazy { VidHideExtractor(client, headers) }
-    private val universalExtractor by lazy { UniversalExtractor(client) }
+    private val sendvidextractor by lazy { SendvidExtractor(client, headers) }
+    private val vidhideextractor by lazy { VidHideExtractor(client, headers) }
+    private val universalextractor by lazy { UniversalExtractor(client) }
 
     override fun videoListRequest(episode: SEpisode): Request {
         val url = "$baseUrl${episode.url}/__data.json"
@@ -236,13 +236,40 @@ class HentailaTv :
         val document = response.parseAs<HentailaTvJsonDto>()
         val serverList = mutableListOf<VideoData>()
 
-        for (each in document.nodes) 
+        for (each in document.nodes) {
+            if (each?.uses?.params != null && each.uses.params.firstOrNull() == "number") {
+                val data = each.data ?: continue
+                val result = data.getOrNull(0)?.jsonObject ?: continue
+
+                val embedsCode = result["embeds"]?.jsonPrimitive?.intOrNull ?: continue
+                val embedData = data.getOrNull(embedsCode)?.jsonObject ?: continue
+
+                val subEmbedDataCode = embedData["SUB"]?.jsonPrimitive?.intOrNull ?: continue
+                val subEmbedVideoArray = data.getOrNull(subEmbedDataCode)?.jsonArray ?: continue
+
+                val subEmbedVideoArrayList = subEmbedVideoArray.mapNotNull {
+                    it.jsonPrimitive.intOrNull
+                }
+
+                for (sourceCode in subEmbedVideoArrayList) {
+                    val currentSourceData = data.getOrNull(sourceCode)?.jsonObject ?: continue
+
+                    val serverNameCode = currentSourceData["server"]?.jsonPrimitive?.intOrNull ?: continue
+                    val serverUrlCode = currentSourceData["url"]?.jsonPrimitive?.intOrNull ?: continue
+
+                    val serverName = data.getOrNull(serverNameCode)?.jsonPrimitive?.content ?: continue
+                    val serverUrl = data.getOrNull(serverUrlCode)?.jsonPrimitive?.content ?: continue
+
+                    serverList.add(VideoData(serverName, serverUrl))
+                }
+            }
+        }
 
         return serverList
             .partition { it.name.lowercase() == "vip" }
             .let { (vips, others) ->
                 val vipVideos = vips.catchingFlatMapBlocking { vip ->
-                    universalExtractor.videosFromUrl(
+                    universalextractor.videosFromUrl(
                         vip.url.replace("/play/", "/m3u8/"),
                         origRequestHeader = headers,
                         prefix = "VIP",
@@ -262,13 +289,11 @@ class HentailaTv :
 
                         "burst" -> burstCloudExtractor.videoFromUrl(each.url, headers = headers)
 
-                        "sendvid" -> sendvidExtractor.videosFromUrl(each.url)
+                        "sendvid" -> sendvidextractor.videosFromUrl(each.url)
 
-                        "mediafire" -> mediaFireExtractor.getVideoFromUrl(each.url)
+                        "mediafire", "fireload" -> universalextractor.videosFromUrl(each.url, headers)
 
-                        "fireload" -> fireLoadExtractor.getVideoFromUrl(each.url)
-
-                        "vidhide" -> vidhideExtractor.videosFromUrl(each.url)
+                        "vidhide" -> vidhideextractor.videosFromUrl(each.url)
 
                         else -> emptyList()
                     }
